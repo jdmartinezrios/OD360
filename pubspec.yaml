@@ -47,6 +47,8 @@ flutter:
    - assets/icns/icn_hidePassword_hidden@3x.png
    - assets/icns/icn_checkUsername@3x.png
    - assets/icns/icn_error@3x.png
+   - assets/imgs/img_towerLogo@3x.png
+   - assets/imgs/workana2.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
