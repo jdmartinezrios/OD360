@@ -340,7 +340,7 @@ class _OnBoardViewState extends State<OnBoardView> {
       // Show or hide status bar
       shouldHideStatusBar: true,
 
-      backgroundColorAllSlides: Color(0xFF0066BE).withOpacity(0.2),
+      backgroundColorAllSlides: Color(0xFF000000),
     );
   }
 

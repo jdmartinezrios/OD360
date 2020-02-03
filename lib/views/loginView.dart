@@ -39,7 +39,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
     );
     _controllerLauncherVerify = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 300),
       lowerBound: 0.0,
       upperBound: 0.1,
     )..addListener(() {
@@ -55,7 +55,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
     );
     _controllerWidthVerify = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 300),
     )..addListener(() {
         setState(() {});
       });
@@ -79,7 +79,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
     ).animate(
       CurvedAnimation(
         parent: _controllerWidthVerify,
-        curve: Curves.decelerate,
+        curve: Curves.easeOut,
       ),
     );
     _animationForm = CurvedAnimation(
@@ -101,7 +101,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
     ).animate(
       CurvedAnimation(
         parent: _controllerWidthVerify,
-        curve: Curves.decelerate,
+        curve: Curves.easeOut,
       ),
     );
     Future.delayed(
@@ -152,17 +152,20 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                 width: statusAnimation ? widthVerify.value : width.value,
               ),
             ),
-            if (email != null && verifyEmail(email))
-              Align(
-                alignment: Alignment(0.0, _animationLauncher.value * -.40),
-                widthFactor: MediaQuery.of(context).size.width,
-                child: Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(left: 40.0, right: 40.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
+            Align(
+              alignment: Alignment(0.0, _animationLauncher.value * -.40),
+              widthFactor: MediaQuery.of(context).size.width,
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(left: 40.0, right: 40.0),
+                child: Stack(
+                  children: <Widget>[
+                    AnimatedOpacity(
+                      opacity: email != null && verifyEmail(email) ? 1.0 : 0.0,
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.decelerate,
+                      child: Container(
                         margin: EdgeInsets.only(top: 6.0),
                         width: MediaQuery.of(context).size.width,
                         child: Text(
@@ -175,7 +178,12 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      Container(
+                    ),
+                    AnimatedOpacity(
+                      opacity: email != null && verifyEmail(email) ? 1.0 : 0.0,
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.easeOut,
+                      child: Container(
                         margin: EdgeInsets.only(top: 26.0),
                         width: MediaQuery.of(context).size.width,
                         child: Text(
@@ -188,10 +196,11 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+            ),
             Positioned(
               child: Form(
                 key: _formLogin,
@@ -201,7 +210,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                     margin: EdgeInsets.only(
                         left: 40.0,
                         right: 40.0,
-                        bottom: _controllerForm.value *
+                        bottom: _animationForm.value *
                             MediaQuery.of(context).size.height /
                             4),
                     child: Column(

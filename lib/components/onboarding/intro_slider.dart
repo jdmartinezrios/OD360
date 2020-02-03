@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dot_animation_enum.dart';
 import 'list_rtl_language.dart';
 import 'slide_object.dart';
 import 'package:video_player/video_player.dart';
+import 'package:od360/globals/globals.dart' as globals;
 
 class IntroSlider extends StatefulWidget {
   // ---------- Slides ----------
@@ -455,6 +458,8 @@ class IntroSliderState extends State<IntroSlider>
 
   TabController tabController;
   VideoPlayerController _controllerVideo;
+  Animation _animationTranslate;
+  AnimationController _controllerTranslation;
 
   List<Widget> tabs = new List();
   List<Widget> dots = new List();
@@ -468,31 +473,48 @@ class IntroSliderState extends State<IntroSlider>
   // For SIZE_TRANSITION
   double currentAnimationValue = 0;
   int currentTabIndex = 0;
-  double opacity = 0.0;
+  bool statusOpacity;
 
   @override
   void initState() {
-    _controllerVideo = VideoPlayerController.asset('assets/videos/welcome.mp4')
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized
-        setState(() {
-          _controllerVideo.play();
-          _controllerVideo.setLooping(true);
-        });
-      });
+    // _controllerVideo = VideoPlayerController.asset('assets/videos/welcome.mp4')
+    //   ..initialize().then((_) {
+    //     // Ensure the first frame is shown after the video is initialized
+    //     setState(() {
+    //       _controllerVideo.play();
+    //       _controllerVideo.setLooping(true);
+    //     });
+    //   });
     super.initState();
+
+    statusOpacity = false;
+
+    _controllerTranslation =
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    _animationTranslate = Tween(begin: 30.0, end: -70.0).animate(
+      CurvedAnimation(
+        parent: _controllerTranslation,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _controllerTranslation.addListener(
+      () => setState(() {
+        if (_controllerTranslation.isAnimating) {
+          // print('HEYYYYYY ' + _controllerTranslation.value.toString());
+        }
+      }),
+    );
 
     // playVideo();
     tabController = new TabController(length: slides.length, vsync: this);
     tabController.addListener(() {
       if (tabController.indexIsChanging) {
-        setState(() {
-          opacity = 0.0;
-        });
         currentTabIndex = tabController.previousIndex;
       } else {
         setState(() {
-          opacity = 1.0;
+          statusOpacity = false;
+          globals.traslationOnBoard = false;
         });
         currentTabIndex = tabController.index;
       }
@@ -744,12 +766,25 @@ class IntroSliderState extends State<IntroSlider>
         length: slides.length,
         child: Stack(
           children: <Widget>[
-            TabBarView(
-              children: tabs,
-              controller: tabController,
-              physics: isScrollable
-                  ? ScrollPhysics()
-                  : NeverScrollableScrollPhysics(),
+            AnimatedOpacity(
+              opacity: statusOpacity ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 600),
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Color(0xFF000000),
+                ),
+                child: TabBarView(
+                  children: tabs,
+                  controller: tabController,
+                  physics:
+                      // isScrollable
+                      //     ? ScrollPhysics()
+                      // :
+                      NeverScrollableScrollPhysics(),
+                ),
+              ),
             ),
             renderBottom(),
           ],
@@ -799,9 +834,15 @@ class IntroSliderState extends State<IntroSlider>
   Widget buildNextButton() {
     return GestureDetector(
       onTap: () {
-        if (!this.isAnimating(tabController.animation.value)) {
-          tabController.animateTo(tabController.index + 1);
-        }
+        setState(() {
+          globals.traslationOnBoard = true;
+          statusOpacity = true;
+        });
+        Future.delayed(Duration(milliseconds: 600), () {
+          if (!this.isAnimating(tabController.animation.value)) {
+            tabController.animateTo(tabController.index + 1);
+          }
+        });
       },
       child: renderNextBtn,
     );
@@ -1008,76 +1049,48 @@ class IntroSliderState extends State<IntroSlider>
                         end: directionColorEnd ?? Alignment.bottomRight,
                       ),
                     ),
-              // child: 
-              // AnimatedOpacity(
-              //   opacity: opacity,
-              //   duration: Duration(milliseconds: 500),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 60.0),
-                  child: Stack(
-                    // ListView(
-                    //   physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[
-                      Container(
-                        // Title
-                        child: widgetTitle ??
-                            Text(
-                              title ?? "",
-                              style: styleTitle ??
-                                  TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30.0,
-                                  ),
-                              maxLines: maxLineTitle != null ? maxLineTitle : 1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        margin: marginTitle ??
-                            EdgeInsets.only(
-                                top: 70.0,
-                                bottom: 50.0,
-                                left: 20.0,
-                                right: 20.0),
-                      ),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 60.0),
+                child: Stack(
+                  // ListView(
+                  //   physics: NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    Container(
+                      // Title
+                      child: widgetTitle ??
+                          Text(
+                            title ?? "",
+                            style: styleTitle ??
+                                TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30.0,
+                                ),
+                            maxLines: maxLineTitle != null ? maxLineTitle : 1,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      margin: marginTitle ??
+                          EdgeInsets.only(
+                              top: 70.0, bottom: 50.0, left: 20.0, right: 20.0),
+                    ),
 
-                      // Image or Center widget
-                      GestureDetector(
-                        child: pathImage != null
-                            ? Image.asset(
-                                pathImage,
-                                width: widthImage ?? 200.0,
-                                height: heightImage ?? 200.0,
-                                fit: foregroundImageFit ?? BoxFit.contain,
-                              )
-                            : Center(child: centerWidget ?? Container()),
-                        onTap: onCenterItemPress,
-                      ),
-
-                      // Description
-                      Positioned(
-                        bottom: 50,
-                        left: 30.0,
-                        right: 30.0,
-                        child: Container(
-                          child: widgetDescription ??
-                              Text(
-                                description ?? "",
-                                style: styleDescription ??
-                                    TextStyle(
-                                        color: Colors.white, fontSize: 18.0),
-                                textAlign: TextAlign.center,
-                                maxLines: maxLineTextDescription != null
-                                    ? maxLineTextDescription
-                                    : 100,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    // Image or Center widget
+                    GestureDetector(
+                      child: pathImage != null
+                          ? Image.asset(
+                              pathImage,
+                              width: widthImage ?? 200.0,
+                              height: heightImage ?? 200.0,
+                              fit: foregroundImageFit ?? BoxFit.contain,
+                            )
+                          : Center(child: centerWidget ?? Container()),
+                      onTap: onCenterItemPress,
+                    ),
+                    Description(widgetDescription: widgetDescription),
+                  ],
                 ),
-              // ),
+              ),
             ),
           ],
         ),
@@ -1103,6 +1116,54 @@ class IntroSliderState extends State<IntroSlider>
         margin: EdgeInsets.only(left: radius / 2, right: radius / 2),
       ),
       opacity: opacity,
+    );
+  }
+}
+
+class Description extends StatefulWidget {
+  final widgetDescription;
+
+  Description({this.widgetDescription});
+
+  @override
+  _DescriptionState createState() => _DescriptionState();
+}
+
+class _DescriptionState extends State<Description> {
+  bool statusAnimation;
+
+  @override
+  void initState() {
+    statusAnimation = false;
+    // TODO: implement initState
+    super.initState();
+    Timer.periodic(
+      Duration(milliseconds: 1),
+      (Timer r) => getValueTraslation(),
+    );
+  }
+
+  void getValueTraslation() {
+    setState(() {
+      statusAnimation = globals.traslationOnBoard;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      bottom: 50,
+      left: statusAnimation ? -70.0 : 30.0,
+      right: statusAnimation ? 130.0 : 30.0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+      child: Container(
+        child: AnimatedOpacity(
+          opacity: statusAnimation ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 300),
+          child: widget.widgetDescription,
+        ),
+      ),
     );
   }
 }
