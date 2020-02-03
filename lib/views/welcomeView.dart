@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:od360/views/onboardView.dart';
 
 class WelcomeView extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _WelcomeViewState extends State<WelcomeView>
     // TODO: implement initState
     super.initState();
     _controllerProgress = AnimationController(
-        duration: Duration(milliseconds: 4000), vsync: this);
+        duration: Duration(milliseconds: 1000), vsync: this);
     _controllerTower = AnimationController(
         duration: Duration(milliseconds: 1000), vsync: this);
     _controllerRegard = AnimationController(
@@ -37,7 +38,14 @@ class _WelcomeViewState extends State<WelcomeView>
     _controllerTower.forward();
     _controllerRegard.forward();
     _controllerProgress.addListener(() {
-      setState(() {});
+      if (_controllerProgress.isCompleted) {
+        Future.delayed(Duration(milliseconds: 1000), () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => OnBoardView()));
+        });
+      }
     });
     _controllerTower.addListener(() {
       setState(() {});
