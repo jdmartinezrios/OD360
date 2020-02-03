@@ -640,9 +640,15 @@ class IntroSliderState extends State<IntroSlider>
     // Skip button
     if (onSkipPress == null) {
       onSkipPress = () {
-        if (!this.isAnimating(tabController.animation.value)) {
-          tabController.animateTo(slides.length - 1);
-        }
+        setState(() {
+          globals.traslationOnBoard = true;
+          statusOpacity = true;
+        });
+        Future.delayed(Duration(milliseconds: 600), () {
+          if (!this.isAnimating(tabController.animation.value)) {
+            tabController.animateTo(slides.length - 1);
+          }
+        });
       };
     }
     if (isShowSkipBtn == null) {
@@ -1131,13 +1137,14 @@ class Description extends StatefulWidget {
 
 class _DescriptionState extends State<Description> {
   bool statusAnimation;
+  Timer _timerLand;
 
   @override
   void initState() {
     statusAnimation = false;
     // TODO: implement initState
     super.initState();
-    Timer.periodic(
+    _timerLand = Timer.periodic(
       Duration(milliseconds: 1),
       (Timer r) => getValueTraslation(),
     );
@@ -1165,5 +1172,12 @@ class _DescriptionState extends State<Description> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timerLand.cancel();
   }
 }
