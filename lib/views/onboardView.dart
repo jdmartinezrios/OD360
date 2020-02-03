@@ -293,7 +293,7 @@ class _OnBoardViewState extends State<OnBoardView> {
     );
   }
 
-   Widget renderDoneBtn() {
+  Widget renderDoneBtn() {
     return new Container(
       height: 47.0,
       width: 181.0,

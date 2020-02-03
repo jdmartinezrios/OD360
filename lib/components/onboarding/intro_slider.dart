@@ -859,14 +859,16 @@ class IntroSliderState extends State<IntroSlider>
       child: Row(
         children: <Widget>[
           // Next, Done button
-          Container(
-            alignment: Alignment.center,
-            child: isShowDoneBtn
-                ? (tabController.index + 1 == slides.length
-                    ? buildDoneButton()
-                    : buildNextButton())
-                : Container(),
-            width: widthDoneBtn ?? MediaQuery.of(context).size.width / 4,
+          NexButton(
+            widgetNexButton: Container(
+              alignment: Alignment.center,
+              child: isShowDoneBtn
+                  ? (tabController.index + 1 == slides.length
+                      ? buildDoneButton()
+                      : buildNextButton())
+                  : Container(),
+              width: widthDoneBtn ?? MediaQuery.of(context).size.width / 4,
+            ),
           ),
 
           // Dot indicator
@@ -1169,6 +1171,61 @@ class _DescriptionState extends State<Description> {
           opacity: statusAnimation ? 0.0 : 1.0,
           duration: Duration(milliseconds: 300),
           child: widget.widgetDescription,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timerLand.cancel();
+  }
+}
+
+class NexButton extends StatefulWidget {
+  final widgetNexButton;
+
+  NexButton({this.widgetNexButton});
+
+  @override
+  _NexButtonState createState() => _NexButtonState();
+}
+
+class _NexButtonState extends State<NexButton> {
+  bool statusAnimation;
+  Timer _timerLand;
+
+  @override
+  void initState() {
+    statusAnimation = false;
+    // TODO: implement initState
+    super.initState();
+    _timerLand = Timer.periodic(
+      Duration(milliseconds: 1),
+      (Timer r) => getValueTraslation(),
+    );
+  }
+
+  void getValueTraslation() {
+    setState(() {
+      statusAnimation = globals.traslationOnBoard;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      transform:
+          Matrix4.translationValues(statusAnimation ? -100.0 : 0.0, 0.0, 0.0),
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+      child: Container(
+        child: AnimatedOpacity(
+          opacity: statusAnimation ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 300),
+          child: widget.widgetNexButton,
         ),
       ),
     );
