@@ -500,13 +500,9 @@ class IntroSliderState extends State<IntroSlider>
 
     _controllerTranslation.addListener(
       () => setState(() {
-        if (_controllerTranslation.isAnimating) {
-          // print('HEYYYYYY ' + _controllerTranslation.value.toString());
-        }
+        if (_controllerTranslation.isAnimating) {}
       }),
     );
-
-    // playVideo();
     tabController = new TabController(length: slides.length, vsync: this);
     tabController.addListener(() {
       if (tabController.indexIsChanging) {

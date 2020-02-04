@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:od360/components/onboarding/intro_slider.dart';
 import 'package:od360/components/onboarding/slide_object.dart';
+import 'package:od360/views/principalView.dart';
 
 class OnBoardView extends StatefulWidget {
   @override
@@ -333,19 +334,26 @@ class _OnBoardViewState extends State<OnBoardView> {
 
       // Done button
       renderDoneBtn: this.renderDoneBtn(),
-      onDonePress: this.onDonePress,
       colorDoneBtn: Color(0x33000000),
       highlightColorDoneBtn: Color(0xff000000),
 
       // Show or hide status bar
       shouldHideStatusBar: true,
+      onSkipPress: this.onSkipPress,
+      onDonePress: this.onDonePress,
 
       backgroundColorAllSlides: Color(0xFF000000),
     );
   }
 
   void onDonePress() {
-    setState(() {});
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) => PrincipalView()));
+  }
+
+  void onSkipPress() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) => PrincipalView()));
   }
 
   @override
