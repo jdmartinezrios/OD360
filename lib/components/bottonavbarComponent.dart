@@ -29,7 +29,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
               ? 20.0
               : 0.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withOpacity(0.50),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
