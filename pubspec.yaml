@@ -51,6 +51,8 @@ flutter:
    - assets/icns/icn_error@3x.png
    - assets/imgs/img_towerLogo@3x.png
    - assets/imgs/icn_navBar_logo@3x.png
+   - assets/imgs/icn_home@3x.png
+   - assets/imgs/icn_search_blue@3x.png
    - assets/imgs/workana2.jpg
    - assets/videos/welcome.mp4
    - assets/videos/welcome.gif
