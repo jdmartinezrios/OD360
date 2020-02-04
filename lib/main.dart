@@ -9,9 +9,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      SystemChrome.setEnabledSystemUIOverlays([]);
-    }
+    // if (Platform.isAndroid) {
+    //   SystemChrome.setEnabledSystemUIOverlays([]);
+    // }
     return MaterialApp(
       title: 'OD360',
       debugShowCheckedModeBanner: false,
