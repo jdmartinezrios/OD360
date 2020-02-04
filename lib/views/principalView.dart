@@ -9,13 +9,15 @@ class PrincipalView extends StatefulWidget {
 class _PrincipalViewState extends State<PrincipalView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF2F7FF),
-      extendBody: true,
-      body: Stack(
-        children: <Widget>[
-          TopNavbar(),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0xFFF2F7FF),
+        extendBody: true,
+        body: Stack(
+          children: <Widget>[
+            TopNavbar(),
+          ],
+        ),
       ),
     );
   }

@@ -9,7 +9,7 @@ class TopNavbar extends StatefulWidget {
 
 class _TopNavbarState extends State<TopNavbar> with TickerProviderStateMixin {
   TabController _tabController;
-  ScrollController _listController;
+  // ScrollController _listController;
   bool statusColor = false;
 
   @override
@@ -17,7 +17,7 @@ class _TopNavbarState extends State<TopNavbar> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     _tabController = new TabController(initialIndex: 0, length: 6, vsync: this);
-    _listController = new ScrollController();
+    // _listController = new ScrollController();
     _tabController.addListener(
       () {
         if (_tabController.indexIsChanging) {
@@ -44,19 +44,19 @@ class _TopNavbarState extends State<TopNavbar> with TickerProviderStateMixin {
               child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
           )),
-          ListView(
-            scrollDirection: Axis.horizontal,
-            controller: _listController,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.only(left: 20, right: 20, top: 1.0),
-                child: Image.asset(
-                  'assets/imgs/icn_navBar_logo@3x.png',
-                  height: 32.12,
-                  width: 79.39,
-                ),
-              ),
+          // ListView(
+          //   scrollDirection: Axis.horizontal,
+          //   controller: _listController,
+            // children: <Widget>[
+              // Container(
+              //   alignment: Alignment.center,
+              //   padding: EdgeInsets.only(left: 20, right: 20, top: 1.0),
+              //   child: Image.asset(
+              //     'assets/imgs/icn_navBar_logo@3x.png',
+              //     height: 32.12,
+              //     width: 79.39,
+              //   ),
+              // ),
               TabBar(
                 isScrollable: true,
                 controller: _tabController,
@@ -140,8 +140,8 @@ class _TopNavbarState extends State<TopNavbar> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-            ],
-          ),
+          //   ],
+          // ),
         ],
       ),
     );
