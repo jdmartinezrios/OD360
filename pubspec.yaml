@@ -56,6 +56,7 @@ flutter:
    - assets/imgs/workana2.jpg
    - assets/videos/welcome.mp4
    - assets/videos/welcome.gif
+   - assets/icns/icn_arrowUp_blue@3x.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
